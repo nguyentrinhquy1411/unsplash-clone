@@ -1,0 +1,174 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  firstName String?
+  lastName  String?
+  bio       String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Password authentication
+  password String?
+
+  // OAuth
+  googleId String?
+
+  // Relationships
+  photos        Photo[]
+  collections   Collection[]
+  likes         Like[]
+  downloads     Download[]
+  followers     Follow[]       @relation("UserFollowers")
+  following     Follow[]       @relation("UserFollowing")
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+model Photo {
+  id           String   @id @default(cuid())
+  title        String?
+  description  String?
+  url          String // Full resolution URL
+  thumbnailUrl String // Thumbnail URL
+  width        Int
+  height       Int
+  color        String // Dominant color
+  altText      String?
+  isPublic     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Author
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relationships
+  tags        PhotoTag[]
+  collections CollectionPhoto[]
+  likes       Like[]
+  downloads   Download[]
+
+  @@map("photos")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photos PhotoTag[]
+
+  @@map("tags")
+}
+
+model PhotoTag {
+  id      String @id @default(cuid())
+  photoId String
+  tagId   String
+
+  photo Photo @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([photoId, tagId])
+  @@map("photo_tags")
+}
+
+model Collection {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  isPublic     Boolean  @default(true)
+  coverPhotoId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Owner
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relationships
+  photos CollectionPhoto[]
+
+  @@map("collections")
+}
+
+model CollectionPhoto {
+  id           String @id @default(cuid())
+  collectionId String
+  photoId      String
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  photo      Photo      @relation(fields: [photoId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, photoId])
+  @@map("collection_photos")
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  photoId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photo Photo @relation(fields: [photoId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, photoId])
+  @@map("likes")
+}
+
+model Download {
+  id        String   @id @default(cuid())
+  userId    String
+  photoId   String
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photo Photo @relation(fields: [photoId], references: [id], onDelete: Cascade)
+
+  @@map("downloads")
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
