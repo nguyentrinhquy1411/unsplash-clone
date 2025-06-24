@@ -19,10 +19,16 @@ export interface UnsplashPhoto {
     small: string;
     thumb: string;
   };
+  links: {
+    html: string;
+    download: string;
+  };
   user: {
     id: string;
     username: string;
     name: string;
+    total_photos: number;
+    total_likes: number;
     profile_image: {
       small: string;
       medium: string;
@@ -31,6 +37,10 @@ export interface UnsplashPhoto {
   };
   likes: number;
   downloads: number;
+  views?: number;
+  tags?: Array<{
+    title: string;
+  }>;
 }
 
 export interface PhotosSearchResponse {
@@ -115,3 +125,9 @@ export const photosApi = {
 };
 
 export default api;
+
+// Export individual functions for convenience
+export const fetchPhotoById = photosApi.getPhotoById;
+export const fetchRandomPhotos = photosApi.getRandomPhotos;
+export const searchPhotos = photosApi.searchPhotos;
+export const fetchPhotosByTopic = photosApi.getPhotosByTopic;

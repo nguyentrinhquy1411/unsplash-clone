@@ -1,9 +1,5 @@
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import {
-  photosApi,
-  UnsplashPhoto,
-  PhotosSearchResponse,
-} from "../services/api";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { photosApi, PhotosSearchResponse } from "../services/api";
 
 // Query keys for consistent caching
 export const photoQueryKeys = {
@@ -85,6 +81,43 @@ export const usePhotoDetail = (id: string) => {
     enabled: !!id,
     staleTime: 15 * 60 * 1000, // 15 minutes - photo details don't change often
     gcTime: 60 * 60 * 1000, // 1 hour cache
+  });
+};
+
+// Hook for infinite loading of random photos
+export const useInfinitePhotos = (
+  searchQuery?: string,
+  topic?: string,
+  perPage: number = 10
+) => {
+  // If there's a search query, use search photos
+  if (searchQuery && typeof searchQuery === "string" && searchQuery.trim()) {
+    return useSearchPhotos(searchQuery, perPage);
+  }
+
+  // If there's a topic, use topic photos
+  if (topic && typeof topic === "string" && topic.trim()) {
+    return usePhotosByTopic(topic, perPage);
+  }
+
+  // For random photos, we'll use a simple infinite query
+  return useInfiniteQuery({
+    queryKey: [...photoQueryKeys.all, "infinite", perPage],
+    queryFn: () => {
+      // For random photos, we ignore pageParam since each call returns different photos
+      return photosApi.getRandomPhotos(perPage).then((photos) => ({
+        results: photos,
+        total: 1000, // Assume large number for random photos
+        total_pages: 100, // Allow many pages
+      }));
+    },
+    initialPageParam: 1,
+    getNextPageParam: (_lastPage, pages) => {
+      const nextPage = pages.length + 1;
+      return nextPage <= 100 ? nextPage : undefined; // Allow up to 100 pages
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes cache
   });
 };
 

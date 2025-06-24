@@ -1,137 +1,193 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { UnsplashPhoto } from '../services/api'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
-import 'react-lazy-load-image-component/src/effects/blur.css'
+import { Card, CardContent } from './ui/card'
+import { Button } from './ui/button'
+import { Badge } from './ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { Heart, Download, Eye, Calendar } from 'lucide-react'
+import { cn } from '../lib/utils'
 
 interface PhotoCardProps {
   photo: UnsplashPhoto
 }
 
-const PhotoCard: React.FC<PhotoCardProps> = ({ photo }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(({ photo }, ref) => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [isFavorite, setIsFavorite] = useState(false)
+  const navigate = useNavigate()
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation()
     try {
+      const response = await fetch(photo.urls.full)
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      
       const link = document.createElement('a')
-      link.href = photo.urls.full
+      link.href = url
       link.download = `unsplash-${photo.id}.jpg`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+      URL.revokeObjectURL(url)
     } catch (error) {
       console.error('Download failed:', error)
     }
   }
 
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    const favorites = JSON.parse(localStorage.getItem('favoritePhotos') || '[]')
+    const isCurrentlyFavorite = favorites.some((p: any) => p.id === photo.id)
+    
+    let newFavorites
+    if (isCurrentlyFavorite) {
+      newFavorites = favorites.filter((p: any) => p.id !== photo.id)
+    } else {
+      newFavorites = [photo, ...favorites]
+    }
+    
+    localStorage.setItem('favoritePhotos', JSON.stringify(newFavorites))
+    setIsFavorite(!isCurrentlyFavorite)
+  }
+
+  const handlePhotoClick = () => {
+    // Save to recent photos
+    const recentPhotos = JSON.parse(localStorage.getItem('recentPhotos') || '[]')
+    const filteredRecent = recentPhotos.filter((p: any) => p.id !== photo.id)
+    const newRecent = [photo, ...filteredRecent].slice(0, 50)
+    localStorage.setItem('recentPhotos', JSON.stringify(newRecent))
+    
+    // Navigate to photo detail
+    navigate(`/photo/${photo.id}`)
+  }
+  // For masonry layout with CSS columns, we don't need to calculate grid spans
+  // The CSS columns will handle the natural stacking
+
+  React.useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favoritePhotos') || '[]')
+    setIsFavorite(favorites.some((p: any) => p.id === photo.id))
+  }, [photo.id])
+
   return (
-    <>
-      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-        <div className="relative group cursor-pointer" onClick={() => setIsModalOpen(true)}>
-          <LazyLoadImage
-            src={photo.urls.small}
-            alt={photo.alt_description || photo.description || 'Unsplash photo'}
-            effect="blur"
-            className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-            placeholder={
-              <div className="w-full h-64 bg-gray-200 animate-pulse flex items-center justify-center">
-                <span className="text-gray-400">Loading...</span>
-              </div>
-            }
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300" />
-          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                handleDownload()
-              }}
-              className="bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-800 p-2 rounded-full shadow-md transition-all duration-200"
-              title="Download"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </button>
-          </div>
+    <Card 
+      ref={ref}
+      className={cn(
+        "group cursor-pointer overflow-hidden border-0 bg-card hover:shadow-lg transition-all duration-300",
+        "break-inside-avoid mb-6 w-full inline-block"
+      )}
+      onClick={handlePhotoClick}
+    >
+      <div className="relative overflow-hidden">
+        {/* Loading skeleton */}
+        {isLoading && (
+          <div className="absolute inset-0 bg-muted animate-pulse" />
+        )}
+          {/* Photo Image */}
+        <img
+          src={photo.urls.small}
+          alt={photo.alt_description || photo.description || 'Photo'}
+          className={cn(
+            "w-full h-auto block object-cover transition-transform duration-300 group-hover:scale-105",
+            isLoading ? "opacity-0" : "opacity-100"
+          )}
+          onLoad={() => setIsLoading(false)}
+          onError={() => setIsLoading(false)}
+        />
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+
+        {/* Action buttons - top right */}
+        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <Button
+            size="icon"
+            variant="secondary"
+            className="h-8 w-8 bg-white/90 hover:bg-white text-black"
+            onClick={handleFavorite}
+          >
+            <Heart 
+              className={cn(
+                "h-4 w-4",
+                isFavorite ? "fill-red-500 text-red-500" : ""
+              )} 
+            />
+          </Button>
+          <Button
+            size="icon"
+            variant="secondary"
+            className="h-8 w-8 bg-white/90 hover:bg-white text-black"
+            onClick={handleDownload}
+          >
+            <Download className="h-4 w-4" />
+          </Button>
         </div>
-        
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center space-x-2">
-              <img
-                src={photo.user.profile_image.small}
-                alt={photo.user.name}
-                className="w-6 h-6 rounded-full"
-              />
-              <span className="text-sm font-medium text-gray-700">{photo.user.name}</span>
-            </div>
-            <div className="flex items-center space-x-3 text-sm text-gray-500">
-              <span className="flex items-center">
-                <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                </svg>
-                {photo.likes}
-              </span>
-              <span className="flex items-center">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                {photo.downloads}
-              </span>
-            </div>
-          </div>
-          
-          {(photo.description || photo.alt_description) && (
-            <p className="text-sm text-gray-600 line-clamp-2">
-              {photo.description || photo.alt_description}
-            </p>
+
+        {/* Stats overlay - bottom left */}
+        <div className="absolute bottom-3 left-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <Badge variant="secondary" className="bg-white/90 text-black">
+            <Heart className="h-3 w-3 mr-1" />
+            {photo.likes}
+          </Badge>
+          {photo.downloads && (
+            <Badge variant="secondary" className="bg-white/90 text-black">
+              <Download className="h-3 w-3 mr-1" />
+              {photo.downloads}
+            </Badge>
           )}
         </div>
       </div>
 
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4" onClick={() => setIsModalOpen(false)}>
-          <div className="max-w-4xl max-h-full relative" onClick={(e) => e.stopPropagation()}>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-white bg-black bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 z-10"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-            <img
-              src={photo.urls.regular}
-              alt={photo.alt_description || photo.description || 'Unsplash photo'}
-              className="max-w-full max-h-full object-contain rounded-lg"
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4 rounded-b-lg">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <img
-                    src={photo.user.profile_image.medium}
-                    alt={photo.user.name}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <div>
-                    <p className="font-medium">{photo.user.name}</p>
-                    <p className="text-sm text-gray-300">@{photo.user.username}</p>
-                  </div>
-                </div>
-                <button
-                  onClick={handleDownload}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-                >
-                  Download
-                </button>
-              </div>
+      {/* Card Content */}
+      <CardContent className="p-4">
+        {/* User info */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={photo.user.profile_image.small} alt={photo.user.name} />
+              <AvatarFallback>{photo.user.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium truncate">{photo.user.name}</p>
+              <p className="text-xs text-muted-foreground truncate">@{photo.user.username}</p>
             </div>
           </div>
+          
+          {/* Date */}
+          <div className="flex items-center text-xs text-muted-foreground">
+            <Calendar className="h-3 w-3 mr-1" />
+            {new Date(photo.created_at).toLocaleDateString()}
+          </div>
         </div>
-      )}
-    </>
+
+        {/* Description */}
+        {(photo.description || photo.alt_description) && (
+          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+            {photo.description || photo.alt_description}
+          </p>
+        )}
+
+        {/* Footer stats */}
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center">
+              <Eye className="h-3 w-3 mr-1" />
+              {photo.views?.toLocaleString() || 'N/A'} views
+            </span>
+            <span className="flex items-center">
+              <Heart className="h-3 w-3 mr-1" />
+              {photo.likes} likes
+            </span>
+          </div>
+          <Badge variant="outline" className="text-xs">
+            {photo.width} × {photo.height}
+          </Badge>
+        </div>
+      </CardContent>    </Card>
   )
-}
+})
+
+PhotoCard.displayName = 'PhotoCard'
 
 export default PhotoCard
