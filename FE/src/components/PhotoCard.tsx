@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UnsplashPhoto } from '../services/api'
-import { Heart, Download } from 'lucide-react'
+import { Heart, Download, Eye } from 'lucide-react'
 
 interface PhotoCardProps {
   photo: UnsplashPhoto
@@ -73,16 +73,16 @@ const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(({ photo }, r
   return (
     <div
       ref={ref}
-      className="relative group cursor-pointer mb-6 break-inside-avoid"
+      className="relative group cursor-pointer mb-4 break-inside-avoid transform transition-all duration-300 hover:scale-[1.02]"
       onClick={handleCardClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Image Container */}
-      <div className="relative overflow-hidden rounded-lg bg-gray-100">
+      <div className="relative overflow-hidden rounded-2xl bg-gray-100 shadow-elegant shadow-hover">
         {isLoading && (
           <div 
-            className="animate-pulse bg-gray-200 rounded-lg"
+            className="shimmer rounded-2xl"
             style={{ aspectRatio: `${photo.width}/${photo.height}` }}
           />
         )}
@@ -90,28 +90,46 @@ const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(({ photo }, r
         <img
           src={photo.urls.regular}
           alt={photo.alt_description || 'Unsplash photo'}
-          className={`w-full h-auto object-cover rounded-lg transition-all duration-300 ${
+          className={`w-full h-auto object-cover rounded-2xl transition-all duration-500 ${
             isLoading ? 'opacity-0' : 'opacity-100'
-          } ${isHovered ? 'brightness-95' : ''}`}
+          } ${isHovered ? 'scale-105' : 'scale-100'}`}
           onLoad={() => setIsLoading(false)}
           loading="lazy"
         />
 
         {/* Hover Overlay */}
-        <div className={`absolute inset-0 bg-black/20 rounded-lg transition-opacity duration-200 ${
+        <div className={`absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 rounded-2xl transition-all duration-300 ${
           isHovered ? 'opacity-100' : 'opacity-0'
         }`} />
 
+        {/* Stats Badge */}
+        <div className={`absolute top-4 left-4 flex items-center gap-3 transition-all duration-300 ${
+          isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
+        }`}>
+          {photo.likes && (
+            <div className="flex items-center gap-1 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-sm font-medium text-gray-700">
+              <Heart className="h-3.5 w-3.5" />
+              <span>{photo.likes.toLocaleString()}</span>
+            </div>
+          )}
+          {photo.views && (
+            <div className="flex items-center gap-1 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-sm font-medium text-gray-700">
+              <Eye className="h-3.5 w-3.5" />
+              <span>{photo.views.toLocaleString()}</span>
+            </div>
+          )}
+        </div>
+
         {/* Action Buttons */}
-        <div className={`absolute top-3 right-3 flex space-x-2 transition-opacity duration-200 ${
-          isHovered ? 'opacity-100' : 'opacity-0'
+        <div className={`absolute top-4 right-4 flex gap-2 transition-all duration-300 ${
+          isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
         }`}>
           <button
             onClick={handleFavorite}
-            className={`p-2 rounded-full backdrop-blur-sm transition-all duration-200 ${
+            className={`p-3 rounded-full backdrop-blur-md transition-all duration-300 transform hover:scale-110 ${
               isFavorite 
-                ? 'bg-red-500 text-white' 
-                : 'bg-white/90 text-gray-700 hover:bg-white'
+                ? 'bg-red-500 text-white shadow-lg shadow-red-500/25' 
+                : 'bg-white/90 text-gray-700 hover:bg-white hover:text-red-500'
             }`}
           >
             <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
@@ -119,31 +137,52 @@ const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(({ photo }, r
           
           <button
             onClick={handleDownload}
-            className="p-2 rounded-full bg-white/90 text-gray-700 hover:bg-white backdrop-blur-sm transition-all duration-200"
+            className="p-3 rounded-full bg-white/90 text-gray-700 hover:bg-white hover:text-gray-900 backdrop-blur-md transition-all duration-300 transform hover:scale-110"
           >
             <Download className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Bottom Gradient for Author Info */}
-        <div className={`absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/50 to-transparent rounded-b-lg transition-opacity duration-200 ${
-          isHovered ? 'opacity-100' : 'opacity-0'
-        }`} />
-
         {/* Author Info */}
-        <div className={`absolute bottom-3 left-3 flex items-center space-x-2 transition-opacity duration-200 ${
+        <div className={`absolute bottom-4 left-4 right-4 transition-all duration-300 ${
+          isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        }`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <img
+                  src={photo.user.profile_image.small}
+                  alt={photo.user.name}
+                  className="w-10 h-10 rounded-full border-2 border-white shadow-lg"
+                />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+              <div className="text-white">
+                <p className="font-semibold text-sm leading-tight drop-shadow-lg">{photo.user.name}</p>
+                {photo.user.username && (
+                  <p className="text-xs opacity-90 drop-shadow-lg">@{photo.user.username}</p>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full">
+                <span className="text-white text-xs font-medium">
+                  {photo.width} × {photo.height}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Preview Indicator */}
+        <div className={`absolute inset-0 pointer-events-none transition-all duration-300 ${
           isHovered ? 'opacity-100' : 'opacity-0'
         }`}>
-          <img
-            src={photo.user.profile_image.small}
-            alt={photo.user.name}
-            className="w-8 h-8 rounded-full border-2 border-white"
-          />
-          <div className="text-white">
-            <p className="text-sm font-medium leading-tight">{photo.user.name}</p>
-            {photo.user.username && (
-              <p className="text-xs opacity-90">@{photo.user.username}</p>
-            )}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="w-12 h-12 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-xl">
+              <Eye className="h-5 w-5 text-gray-700" />
+            </div>
           </div>
         </div>
       </div>
