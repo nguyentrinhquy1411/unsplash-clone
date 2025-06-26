@@ -1,16 +1,11 @@
 import React from 'react';
-import { PhotoGrid } from '../components/photos/PhotoGrid';
-import { Button } from '../components/ui/button';
-import { Card, CardContent, CardTitle } from '../components/ui/card';
-import { Clock, Trash2 } from 'lucide-react';
-import { Alert, AlertDescription } from '../components/ui/alert';
+import PhotoCard from '../components/PhotoCard';
+import { Trash2 } from 'lucide-react';
 
 const RecentPage: React.FC = () => {
-  // In a real app, this would come from local storage or state management
   const [recentPhotos, setRecentPhotos] = React.useState<any[]>([]);
 
   React.useEffect(() => {
-    // Load recent photos from localStorage
     const stored = localStorage.getItem('recentPhotos');
     if (stored) {
       try {
@@ -28,50 +23,53 @@ const RecentPage: React.FC = () => {
 
   if (recentPhotos.length === 0) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Recent Photos</h1>
+      <div className="space-y-8">
+        <h1 className="text-3xl font-semibold text-gray-900">Recent Photos</h1>
+        <div className="text-center py-16">
+          <div className="text-6xl mb-4">⏰</div>
+          <h3 className="text-xl font-medium text-gray-900 mb-2">No recent photos</h3>
+          <p className="text-gray-600 mb-6">
+            Photos you view will appear here for quick access.
+          </p>
+          <button
+            onClick={() => window.history.back()}
+            className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            Browse Photos
+          </button>
         </div>
-        
-        <Card className="text-center py-12">
-          <CardContent>
-            <Clock className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <CardTitle className="mb-2">No recent photos</CardTitle>
-            <p className="text-muted-foreground mb-4">
-              Photos you view will appear here for quick access.
-            </p>
-            <Button variant="outline" onClick={() => window.history.back()}>
-              Browse Photos
-            </Button>
-          </CardContent>
-        </Card>
       </div>
     );
   }
 
+  const masonryStyle: React.CSSProperties = {
+    columnCount: 3,
+    columnGap: '20px',
+    columnFill: 'balance' as const,
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Recent Photos</h1>
-          <p className="text-muted-foreground">
-            {recentPhotos.length} photo{recentPhotos.length !== 1 ? 's' : ''} viewed recently
-          </p>
+          <h1 className="text-3xl font-semibold text-gray-900">Recent Photos</h1>
+          <p className="text-gray-600 mt-1">{recentPhotos.length} photos viewed recently</p>
         </div>
-        <Button variant="outline" onClick={clearRecent}>
-          <Trash2 className="h-4 w-4 mr-2" />
+        
+        <button
+          onClick={clearRecent}
+          className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          <Trash2 className="h-4 w-4" />
           Clear All
-        </Button>
+        </button>
       </div>
 
-      <Alert>
-        <Clock className="h-4 w-4" />
-        <AlertDescription>
-          Recent photos are stored locally and will be cleared when you clear your browser data.
-        </AlertDescription>
-      </Alert>
-
-      <PhotoGrid photos={recentPhotos} />
+      <div style={masonryStyle}>
+        {recentPhotos.map((photo, index) => (
+          <PhotoCard key={`${photo.id}-${index}`} photo={photo} />
+        ))}
+      </div>
     </div>
   );
 };

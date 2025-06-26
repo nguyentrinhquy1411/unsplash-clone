@@ -1,12 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UnsplashPhoto } from '../services/api'
-import { Card, CardContent } from './ui/card'
-import { Button } from './ui/button'
-import { Badge } from './ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { Heart, Download, Eye, Calendar } from 'lucide-react'
-import { cn } from '../lib/utils'
+import { Heart, Download } from 'lucide-react'
 
 interface PhotoCardProps {
   photo: UnsplashPhoto
@@ -15,7 +10,14 @@ interface PhotoCardProps {
 const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(({ photo }, ref) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isFavorite, setIsFavorite] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
   const navigate = useNavigate()
+
+  // Check if photo is in favorites on mount
+  React.useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favoritePhotos') || '[]')
+    setIsFavorite(favorites.some((p: any) => p.id === photo.id))
+  }, [photo.id])
 
   const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -52,139 +54,94 @@ const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(({ photo }, r
     setIsFavorite(!isCurrentlyFavorite)
   }
 
-  const handlePhotoClick = () => {
+  const handleCardClick = () => {
     // Save to recent photos
     const recentPhotos = JSON.parse(localStorage.getItem('recentPhotos') || '[]')
     const filteredRecent = recentPhotos.filter((p: any) => p.id !== photo.id)
     const newRecent = [photo, ...filteredRecent].slice(0, 50)
     localStorage.setItem('recentPhotos', JSON.stringify(newRecent))
     
-    // Navigate to photo detail
     navigate(`/photo/${photo.id}`)
   }
-  // For masonry layout with CSS columns, we don't need to calculate grid spans
-  // The CSS columns will handle the natural stacking
-
-  React.useEffect(() => {
-    const favorites = JSON.parse(localStorage.getItem('favoritePhotos') || '[]')
-    setIsFavorite(favorites.some((p: any) => p.id === photo.id))
-  }, [photo.id])
 
   return (
-    <Card 
+    <div
       ref={ref}
-      className={cn(
-        "group cursor-pointer overflow-hidden border-0 bg-card hover:shadow-lg transition-all duration-300",
-        "break-inside-avoid mb-6 w-full inline-block"
-      )}
-      onClick={handlePhotoClick}
+      className="relative group cursor-pointer mb-6 break-inside-avoid"
+      onClick={handleCardClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="relative overflow-hidden">
-        {/* Loading skeleton */}
+      {/* Image Container */}
+      <div className="relative overflow-hidden rounded-lg bg-gray-100">
         {isLoading && (
-          <div className="absolute inset-0 bg-muted animate-pulse" />
+          <div 
+            className="animate-pulse bg-gray-200 rounded-lg"
+            style={{ aspectRatio: `${photo.width}/${photo.height}` }}
+          />
         )}
-          {/* Photo Image */}
+        
         <img
-          src={photo.urls.small}
-          alt={photo.alt_description || photo.description || 'Photo'}
-          className={cn(
-            "w-full h-auto block object-cover transition-transform duration-300 group-hover:scale-105",
-            isLoading ? "opacity-0" : "opacity-100"
-          )}
+          src={photo.urls.regular}
+          alt={photo.alt_description || 'Unsplash photo'}
+          className={`w-full h-auto object-cover rounded-lg transition-all duration-300 ${
+            isLoading ? 'opacity-0' : 'opacity-100'
+          } ${isHovered ? 'brightness-95' : ''}`}
           onLoad={() => setIsLoading(false)}
-          onError={() => setIsLoading(false)}
+          loading="lazy"
         />
 
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+        {/* Hover Overlay */}
+        <div className={`absolute inset-0 bg-black/20 rounded-lg transition-opacity duration-200 ${
+          isHovered ? 'opacity-100' : 'opacity-0'
+        }`} />
 
-        {/* Action buttons - top right */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <Button
-            size="icon"
-            variant="secondary"
-            className="h-8 w-8 bg-white/90 hover:bg-white text-black"
+        {/* Action Buttons */}
+        <div className={`absolute top-3 right-3 flex space-x-2 transition-opacity duration-200 ${
+          isHovered ? 'opacity-100' : 'opacity-0'
+        }`}>
+          <button
             onClick={handleFavorite}
+            className={`p-2 rounded-full backdrop-blur-sm transition-all duration-200 ${
+              isFavorite 
+                ? 'bg-red-500 text-white' 
+                : 'bg-white/90 text-gray-700 hover:bg-white'
+            }`}
           >
-            <Heart 
-              className={cn(
-                "h-4 w-4",
-                isFavorite ? "fill-red-500 text-red-500" : ""
-              )} 
-            />
-          </Button>
-          <Button
-            size="icon"
-            variant="secondary"
-            className="h-8 w-8 bg-white/90 hover:bg-white text-black"
+            <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
+          </button>
+          
+          <button
             onClick={handleDownload}
+            className="p-2 rounded-full bg-white/90 text-gray-700 hover:bg-white backdrop-blur-sm transition-all duration-200"
           >
             <Download className="h-4 w-4" />
-          </Button>
+          </button>
         </div>
 
-        {/* Stats overlay - bottom left */}
-        <div className="absolute bottom-3 left-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <Badge variant="secondary" className="bg-white/90 text-black">
-            <Heart className="h-3 w-3 mr-1" />
-            {photo.likes}
-          </Badge>
-          {photo.downloads && (
-            <Badge variant="secondary" className="bg-white/90 text-black">
-              <Download className="h-3 w-3 mr-1" />
-              {photo.downloads}
-            </Badge>
-          )}
+        {/* Bottom Gradient for Author Info */}
+        <div className={`absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/50 to-transparent rounded-b-lg transition-opacity duration-200 ${
+          isHovered ? 'opacity-100' : 'opacity-0'
+        }`} />
+
+        {/* Author Info */}
+        <div className={`absolute bottom-3 left-3 flex items-center space-x-2 transition-opacity duration-200 ${
+          isHovered ? 'opacity-100' : 'opacity-0'
+        }`}>
+          <img
+            src={photo.user.profile_image.small}
+            alt={photo.user.name}
+            className="w-8 h-8 rounded-full border-2 border-white"
+          />
+          <div className="text-white">
+            <p className="text-sm font-medium leading-tight">{photo.user.name}</p>
+            {photo.user.username && (
+              <p className="text-xs opacity-90">@{photo.user.username}</p>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Card Content */}
-      <CardContent className="p-4">
-        {/* User info */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={photo.user.profile_image.small} alt={photo.user.name} />
-              <AvatarFallback>{photo.user.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium truncate">{photo.user.name}</p>
-              <p className="text-xs text-muted-foreground truncate">@{photo.user.username}</p>
-            </div>
-          </div>
-          
-          {/* Date */}
-          <div className="flex items-center text-xs text-muted-foreground">
-            <Calendar className="h-3 w-3 mr-1" />
-            {new Date(photo.created_at).toLocaleDateString()}
-          </div>
-        </div>
-
-        {/* Description */}
-        {(photo.description || photo.alt_description) && (
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-            {photo.description || photo.alt_description}
-          </p>
-        )}
-
-        {/* Footer stats */}
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center">
-              <Eye className="h-3 w-3 mr-1" />
-              {photo.views?.toLocaleString() || 'N/A'} views
-            </span>
-            <span className="flex items-center">
-              <Heart className="h-3 w-3 mr-1" />
-              {photo.likes} likes
-            </span>
-          </div>
-          <Badge variant="outline" className="text-xs">
-            {photo.width} × {photo.height}
-          </Badge>
-        </div>
-      </CardContent>    </Card>
+    </div>
   )
 })
 
