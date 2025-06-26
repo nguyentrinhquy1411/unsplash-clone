@@ -41,7 +41,7 @@ const useIntersectionObserver = (
             fetchNextPage();
           }
         },
-        { threshold: 0.1, rootMargin: '100px' }
+        { threshold: 0.1, rootMargin: '500px' }
       );
 
       if (node) observer.current.observe(node);
