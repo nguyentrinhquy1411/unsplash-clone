@@ -202,6 +202,27 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #d1d5db;
   }
+
+  /* Scroll to top button animations */
+  @keyframes slide-in-from-bottom-8 {
+    from {
+      opacity: 0;
+      transform: translateY(32px) scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .slide-in-from-bottom-8 {
+    animation: slide-in-from-bottom-8 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Enhanced shadow for scroll to top button */
+  .shadow-3xl {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 20px 40px -8px rgba(0, 0, 0, 0.1);
+  }
 }
 
 /* Custom scrollbar with modern design */

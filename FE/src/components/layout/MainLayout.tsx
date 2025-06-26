@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from './Header';
+import ScrollToTop from '../ScrollToTop';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -39,6 +40,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           </div>
         </div>
       </footer>
+      
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </div>
   );
 };

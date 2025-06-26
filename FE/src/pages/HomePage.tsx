@@ -1,5 +1,6 @@
 import React from 'react';
 import InfinitePhotoGrid from '../components/photos/InfinitePhotoGrid';
+import SearchHero from '../components/SearchHero';
 
 const HomePage: React.FC = () => {
   return (
@@ -23,6 +24,11 @@ const HomePage: React.FC = () => {
             The internet's source of freely-usable images.{' '}
             <span className="text-gray-900 font-medium">Powered by creators everywhere.</span>
           </p>
+          
+          {/* Search Hero */}
+          <div className="mt-12">
+            <SearchHero />
+          </div>
           
           {/* Stats */}
           <div className="flex items-center justify-center gap-8 md:gap-12 mt-12 text-center">
@@ -55,7 +61,7 @@ const HomePage: React.FC = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 max-w-6xl mx-auto px-4">
           {[
             { name: 'Nature', emoji: '🌿', color: 'from-green-400 to-emerald-500' },
             { name: 'Architecture', emoji: '🏛️', color: 'from-gray-400 to-slate-500' },
@@ -69,17 +75,24 @@ const HomePage: React.FC = () => {
             <a
               key={category.name}
               href={`/topic/${category.name.toLowerCase()}`}
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br shadow-elegant shadow-hover p-6 md:p-8 text-center text-white transform transition-all duration-300 hover:scale-105"
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br shadow-elegant shadow-hover text-center text-white transform transition-all duration-300 hover:scale-105 aspect-square flex items-center justify-center"
               style={{
                 background: `linear-gradient(135deg, var(--tw-gradient-stops))`,
               }}
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-90`}></div>
-              <div className="relative z-10 space-y-3">
-                <div className="text-3xl md:text-4xl">{category.emoji}</div>
-                <div className="font-semibold text-lg md:text-xl">{category.name}</div>
+              <div className="relative z-10 space-y-2 p-4">
+                <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl transition-all duration-300 group-hover:scale-110">
+                  {category.emoji}
+                </div>
+                <div className="font-semibold text-sm sm:text-base md:text-lg lg:text-xl">
+                  {category.name}
+                </div>
               </div>
               <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              {/* Hover effect overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </a>
           ))}
         </div>
