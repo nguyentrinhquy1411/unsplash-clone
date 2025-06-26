@@ -102,6 +102,59 @@ export class AuthService {
     };
   }
 
+  async googleLogin(googleUser: any) {
+    const { email, firstName, lastName, picture } = googleUser;
+
+    // Check if user exists
+    let user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      // Create new user from Google profile
+      const username =
+        email.split('@')[0] + '_' + Math.random().toString(36).substring(7);
+
+      user = await this.prisma.user.create({
+        data: {
+          email,
+          username,
+          firstName,
+          lastName,
+          avatar: picture,
+          googleId: googleUser.id,
+          // No password for OAuth users
+        },
+      });
+    } else if (!user.googleId) {
+      // Link existing user account with Google
+      user = await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          googleId: googleUser.id,
+          avatar: picture || user.avatar,
+        },
+      });
+    }
+
+    // Generate tokens
+    const tokens = await this.generateTokens(user.id);
+
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatar: user.avatar,
+        bio: user.bio,
+        createdAt: user.createdAt,
+      },
+      ...tokens,
+    };
+  }
+
   async refreshToken(refreshToken: string) {
     try {
       // Verify refresh token

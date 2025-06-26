@@ -33,6 +33,12 @@ const PhotoCard = React.forwardRef<HTMLDivElement, PhotoCardProps>(({ photo }, r
       link.click()
       document.body.removeChild(link)
       URL.revokeObjectURL(url)
+
+      // Save to download history
+      const downloadHistory = JSON.parse(localStorage.getItem('downloadHistory') || '[]')
+      const filteredHistory = downloadHistory.filter((p: any) => p.id !== photo.id)
+      const newHistory = [photo, ...filteredHistory].slice(0, 100) // Keep last 100 downloads
+      localStorage.setItem('downloadHistory', JSON.stringify(newHistory))
     } catch (error) {
       console.error('Download failed:', error)
     }
