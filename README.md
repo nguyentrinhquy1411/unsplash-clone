@@ -2,7 +2,6 @@
 
 A beautiful, modern, and responsive web application that recreates the Unsplash experience with stunning UI/UX, advanced search functionality, and seamless photo browsing.
 
-![Unsplash Clone](https://img.shields.io/badge/Status-Active%20Development-brightgreen)
 ![React](https://img.shields.io/badge/React-18+-blue)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5+-blue)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3+-blue)
@@ -10,123 +9,85 @@ A beautiful, modern, and responsive web application that recreates the Unsplash 
 
 ## ✨ Key Features
 
-### 🎨 **Modern UI/UX Design**
-
-- **Glass-morphism effects** with backdrop blur and transparency
-- **Elegant gradient backgrounds** and sophisticated shadow system
-- **Inter font typography** for professional look
-- **Smooth animations** and micro-interactions throughout
-- **Responsive design** - Perfect experience on mobile, tablet, and desktop
-- **Modern color palette** with gray-based elegant design
-
-### 🔍 **Advanced Search System**
-
-- **Hero search bar** prominently displayed in homepage
-- **Search history** with local storage (last 10 searches)
-- **Trending searches** with automatic rotation animation
-- **Real-time dropdown suggestions** with smooth animations
-- **Category-based browsing** with beautiful gradient cards
-- **Responsive search** - Compact header search + prominent hero search
-
-### 📱 **Responsive Grid System**
-
-- **Mobile-first approach** with adaptive layout:
-  - **Mobile (< 768px)**: 2 columns
-  - **Tablet (768px - 1024px)**: 3 columns
-  - **Desktop (> 1024px)**: 4 columns
-- **Aspect-ratio cards** for consistent visual hierarchy
-- **Touch-friendly interactions** on mobile devices
-
-### 🔐 **Authentication & Security**
-
-- **Google OAuth 2.0** integration with beautiful success page
-- **JWT token management** with automatic refresh
-- **Protected routes** and user session handling
-- **Secure API endpoints** with proper authorization
-- **User profile management** and preferences
-
-### 🖼️ **Photo Management**
-
-- **Infinite scroll** photo grid with lazy loading
-- **Photo detail modal** with fullscreen view capability
-- **Download functionality** with high-resolution options
-- **Favorites system** for bookmarking photos
-- **Photo statistics** (views, downloads, likes, author info)
-- **Optimized image loading** for better performance
+- **Modern UI/UX** - Glass-morphism effects, elegant gradients, smooth animations
+- **Advanced Search** - Hero search bar, trending suggestions, search history
+- **Responsive Design** - Mobile-first approach (2-3-4 column grid)
+- **Google OAuth 2.0** - Secure authentication with beautiful success page
+- **Photo Management** - Infinite scroll, fullscreen view, download & favorites
+- **Scroll to Top** - Floating button with smooth animations
 
 ## 🏗️ Tech Stack
 
-### Frontend Stack
+### Frontend
 
-- **React 18+** - Latest React with Hooks, Suspense, and Concurrent Features
-- **TypeScript 5+** - Full type safety and modern JS features
-- **Vite** - Lightning-fast build tool and dev server
-- **Tailwind CSS 3+** - Utility-first CSS with custom design system
-- **React Router DOM** - Client-side routing with protected routes
-- **React Query/TanStack Query** - Server state management and caching
-- **Lucide React** - Modern, consistent icon library
-- **React Hook Form** - Performant form validation
+- **React 18+** with TypeScript
+- **Vite** - Fast build tool
+- **Tailwind CSS** - Utility-first styling
+- **React Router DOM** - Client-side routing
+- **Lucide React** - Modern icons
 
-### Backend Stack
+### Backend
 
-- **NestJS 10+** - Progressive Node.js framework with decorators
-- **TypeScript** - End-to-end type safety
-- **Prisma ORM** - Type-safe database toolkit with migrations
-- **PostgreSQL** - Robust relational database
-- **JWT & Passport.js** - Authentication and authorization
-- **Google OAuth 2.0** - Social login integration
-- **Swagger/OpenAPI** - API documentation
+- **NestJS** with TypeScript
+- **Prisma ORM** - Database toolkit
+- **PostgreSQL** - Database
+- **JWT & Passport.js** - Authentication
+- **Google OAuth 2.0** - Social login
 
-### Development Tools
-
-## 🚀 Quick Start Guide
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Node.js 18+** and npm/yarn
-- **PostgreSQL** database (local or cloud)
-- **Google OAuth credentials** for authentication
+- Node.js 18+
+- Yarn package manager
+- PostgreSQL database
+- Google OAuth credentials
 
-### 1. Clone Repository
+### Installation
+
+1. **Clone Repository**
 
 ```bash
 git clone https://github.com/yourusername/unsplash-clone.git
 cd unsplash-clone
 ```
 
-### 2. Backend Setup
+2. **Backend Setup**
 
 ```bash
 cd BE
-npm install
+yarn install
 
-# Environment configuration
+# Environment setup
 cp .env.example .env
 # Configure your database URL, JWT secrets, and Google OAuth credentials
 
 # Database setup
-npx prisma migrate dev --name init
-npx prisma generate
+yarn prisma migrate dev
+yarn prisma generate
 
 # Start development server
-npm run start:dev
-# Backend runs on http://localhost:3001
+yarn start:dev
 ```
 
-### 3. Frontend Setup
+3. **Frontend Setup**
 
 ```bash
 cd ../FE
-npm install
+yarn install
 
 # Start development server
-npm run dev
-# Frontend runs on http://localhost:5173
+yarn dev
 ```
 
-### 4. Environment Variables
+4. **Open Application**
 
-#### Backend (.env)
+- Frontend: http://localhost:5173
+- Backend: http://localhost:3001
+
+## 🔧 Environment Variables
+
+### Backend (.env)
 
 ```env
 DATABASE_URL="postgresql://username:password@localhost:5432/unsplash_clone"
@@ -138,7 +99,7 @@ GOOGLE_CALLBACK_URL="http://localhost:3001/api/auth/google/callback"
 FRONTEND_URL="http://localhost:5173"
 ```
 
-#### Frontend (.env)
+### Frontend (.env)
 
 ```env
 VITE_API_URL=http://localhost:3001/api
@@ -152,18 +113,9 @@ unsplash-clone/
 ├── BE/                           # Backend (NestJS)
 │   ├── src/
 │   │   ├── auth/                # Authentication module
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── auth.service.ts
-│   │   │   ├── strategies/      # JWT & Google OAuth strategies
-│   │   │   └── guards/          # Auth guards
 │   │   ├── photos/              # Photos management
-│   │   │   ├── photos.controller.ts
-│   │   │   ├── photos.service.ts
-│   │   │   └── dto/             # Data transfer objects
 │   │   ├── prisma/              # Database service
-│   │   │   ├── prisma.module.ts
-│   │   │   └── prisma.service.ts
-│   │   └── main.ts              # Application entry point
+│   │   └── main.ts              # Application entry
 │   ├── prisma/
 │   │   ├── schema.prisma        # Database schema
 │   │   └── migrations/          # Database migrations
@@ -172,242 +124,86 @@ unsplash-clone/
 ├── FE/                           # Frontend (React + Vite)
 │   ├── src/
 │   │   ├── components/          # Reusable components
-│   │   │   ├── layout/          # Layout components
-│   │   │   │   ├── Header.tsx   # Main navigation with search
-│   │   │   │   └── MainLayout.tsx
-│   │   │   ├── photos/          # Photo-related components
-│   │   │   │   ├── PhotoCard.tsx
-│   │   │   │   ├── PhotoGrid.tsx
-│   │   │   │   └── InfinitePhotoGrid.tsx
-│   │   │   ├── ui/              # Shadcn/ui components
+│   │   │   ├── layout/          # Header, MainLayout
+│   │   │   ├── photos/          # PhotoCard, PhotoGrid
 │   │   │   ├── SearchHero.tsx   # Main search component
-│   │   │   └── LoadingSpinner.tsx
+│   │   │   └── ScrollToTop.tsx  # Scroll to top button
 │   │   ├── pages/               # Page components
-│   │   │   ├── HomePage.tsx     # Landing page with hero
-│   │   │   ├── LoginPage.tsx    # Authentication
-│   │   │   ├── PhotoDetailPage.tsx
-│   │   │   └── GoogleAuthSuccessPage.tsx
 │   │   ├── contexts/            # React contexts
-│   │   │   └── AuthContext.tsx  # Authentication state
-│   │   ├── hooks/               # Custom React hooks
-│   │   ├── services/            # API services
-│   │   │   ├── api.ts           # Axios configuration
-│   │   │   └── auth.ts          # Auth service
-│   │   └── styles/
-│   │       └── index.css        # Global styles & Tailwind
-│   ├── public/                  # Static assets
+│   │   ├── hooks/               # Custom hooks
+│   │   └── services/            # API services
 │   └── package.json
 │
-└── README.md                    # This comprehensive guide
+└── README.md
 ```
-
-## 🎨 Design System & UI
-
-### Color Palette
-
-- **Primary**: Sophisticated grays (50-900) for elegance
-- **Accent**: Blue gradients (#3B82F6 to #8B5CF6) for interactions
-- **Success**: Emerald tones for positive actions
-- **Warning**: Amber tones for cautions
-- **Error**: Red tones for errors and validation
-
-### Typography
-
-- **Font Family**: Inter (Google Fonts) - Modern, readable
-- **Headings**: Font weight 600, tight letter spacing (-0.025em)
-- **Body Text**: Font weight 400-500, comfortable line height (1.6)
-- **Small Text**: Font weight 500, uppercase tracking for labels
-
-### Component Library
-
-- **Glass-morphism**: `backdrop-blur-xl`, `bg-white/95` for modern feel
-- **Elegant Shadows**: Multi-layer shadows with `shadow-elegant` utility
-- **Rounded Corners**: `rounded-2xl` (16px) for cards, `rounded-3xl` (24px) for search
-- **Smooth Transitions**: 200-300ms ease curves for all interactions
-
-### Grid System
-
-- **Container**: `max-w-7xl mx-auto` for content width
-- **Responsive Breakpoints**:
-  - Mobile: `< 768px` - 2 columns
-  - Tablet: `768px - 1024px` - 3 columns
-  - Desktop: `> 1024px` - 4 columns
-- **Aspect Ratios**: `aspect-square` for category cards, dynamic for photos
-
-## 🧩 Key Components
-
-### 🔍 SearchHero Component
-
-```tsx
-// Advanced search with trending suggestions and history
-<SearchHero />
-```
-
-Features:
-
-- Large, prominent search input with animations
-- Trending searches that rotate automatically
-- Search history stored locally
-- Responsive dropdown with suggestions
-- Gradient focus effects
-
-### 🖼️ PhotoCard Component
-
-```tsx
-// Elegant photo display with hover effects
-<PhotoCard photo={photoData} />
-```
-
-Features:
-
-- Optimized image loading with lazy loading
-- Hover effects with author info overlay
-- Download and favorite buttons
-- Responsive sizing with proper aspect ratios
-
-### 🔐 GoogleAuthSuccessPage
-
-```tsx
-// Beautiful loading page for OAuth completion
-<GoogleAuthSuccessPage />
-```
-
-Features:
-
-- Animated loading indicators
-- Gradient background with decorative elements
-- Progress visualization
-- Automatic redirect after authentication
 
 ## 🛠️ Development Scripts
 
-### Frontend Commands
+### Frontend
 
 ```bash
-npm run dev          # Start dev server (http://localhost:5173)
-npm run build        # Production build
-npm run preview      # Preview production build
-npm run lint         # Run ESLint checks
-npm run lint:fix     # Auto-fix ESLint issues
-npm run type-check   # TypeScript type checking
+yarn dev          # Start dev server
+yarn build        # Production build
+yarn preview      # Preview build
+yarn lint         # ESLint check
 ```
 
-### Backend Commands
+### Backend
 
 ```bash
-npm run start:dev    # Development mode with hot reload
-npm run build        # Build for production
-npm run start:prod   # Production server
-npm run test         # Run unit tests
-npm run test:e2e     # End-to-end tests
-npm run prisma:migrate    # Run database migrations
-npm run prisma:studio     # Open Prisma Studio GUI
-npm run prisma:generate   # Generate Prisma client
+yarn start:dev    # Development mode
+yarn build        # Production build
+yarn start:prod   # Production server
+yarn prisma:migrate   # Database migrations
+yarn prisma:studio    # Prisma Studio GUI
 ```
 
-## 🚀 Production Deployment
+## 🎨 UI Components
 
-### Frontend (Vercel/Netlify)
+### Key Features
 
-1. **Build**: `npm run build` in `/FE`
-2. **Deploy**: Upload `dist/` folder or connect Git repo
-3. **Environment**: Set `VITE_API_URL` and `VITE_GOOGLE_CLIENT_ID`
-4. **Domain**: Configure custom domain if needed
+- **SearchHero** - Large search with trending suggestions
+- **PhotoCard** - Elegant photo display with hover effects
+- **ScrollToTop** - Floating button with smooth animations
+- **GoogleAuthSuccessPage** - Beautiful OAuth completion page
+- **Responsive Grid** - 2-3-4 column layout system
 
-### Backend (Railway/Heroku/DigitalOcean)
+### Design System
 
-1. **Database**: Set up PostgreSQL instance
-2. **Environment**: Configure all required environment variables
-3. **Migrations**: Run `npx prisma migrate deploy`
-4. **Build**: `npm run build`
-5. **Start**: `npm run start:prod`
+- **Colors**: Sophisticated grays with blue accents
+- **Typography**: Inter font with elegant spacing
+- **Animations**: Smooth 200-300ms transitions
+- **Shadows**: Multi-layer elegant shadows
+- **Glass-morphism**: Backdrop blur effects
 
-### Environment Setup Checklist
+## 🚀 Deployment
 
-- [ ] PostgreSQL database URL
-- [ ] JWT secret keys (32+ characters)
-- [ ] Google OAuth credentials
-- [ ] CORS settings for frontend domain
-- [ ] SSL certificates for HTTPS
+### Quick Deploy
+
+1. **Frontend**: Build with `yarn build` and deploy to Vercel/Netlify
+2. **Backend**: Deploy to Railway/Heroku with PostgreSQL
+3. **Database**: Run `yarn prisma migrate deploy`
+4. **Environment**: Set all required variables
 
 ## 🤝 Contributing
 
-### Development Workflow
-
-1. **Fork** the repository
-2. **Clone** your fork: `git clone <your-fork-url>`
-3. **Branch**: `git checkout -b feature/amazing-feature`
-4. **Code**: Follow TypeScript and ESLint rules
-5. **Test**: Ensure all tests pass
-6. **Commit**: `git commit -m 'feat: add amazing feature'`
-7. **Push**: `git push origin feature/amazing-feature`
-8. **PR**: Create Pull Request with description
-
-### Code Standards
-
-- **TypeScript**: Strict mode enabled, proper typing
-- **ESLint**: Follow React and Node.js best practices
-- **Prettier**: Consistent code formatting (2 spaces, single quotes)
-- **Commits**: Use conventional commits (feat, fix, docs, etc.)
-- **Testing**: Write tests for new features
-
-### Design Guidelines
-
-- **Mobile-first**: Design for mobile, enhance for desktop
-- **Accessibility**: ARIA labels, keyboard navigation, screen readers
-- **Performance**: Lazy loading, code splitting, image optimization
-- **SEO**: Proper meta tags, semantic HTML, structured data
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/name`
+3. Commit changes: `git commit -m 'feat: add feature'`
+4. Push to branch: `git push origin feature/name`
+5. Open Pull Request
 
 ## 📝 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## 🙏 Credits
 
-- **[Unsplash](https://unsplash.com)** - Inspiration for design and functionality
-- **[Tailwind CSS](https://tailwindcss.com)** - Amazing utility-first CSS framework
-- **[Shadcn/ui](https://ui.shadcn.com)** - Beautiful React component library
-- **[Lucide](https://lucide.dev)** - Consistent and beautiful icon set
-- **[Prisma](https://prisma.io)** - Next-generation ORM for TypeScript
-- **[NestJS](https://nestjs.com)** - Progressive Node.js framework
-
-## 📞 Support & Community
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/unsplash-clone/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/unsplash-clone/discussions)
-- **Documentation**: Check `/docs` folder for detailed guides
-- **Examples**: See `/examples` for implementation examples
+- [Unsplash](https://unsplash.com) - Design inspiration
+- [Tailwind CSS](https://tailwindcss.com) - Styling framework
+- [Lucide](https://lucide.dev) - Icon library
+- [Prisma](https://prisma.io) - Database toolkit
 
 ---
 
-**✨ Built with love using React, TypeScript, Tailwind CSS, and NestJS ✨**
-
-_Happy coding! 🚀 Let's build something amazing together!_
-
-1. Start the backend:
-
-```bash
-cd BE
-npm run start:dev
-```
-
-2. Start the frontend:
-
-```bash
-cd FE
-npm run dev
-```
-
-3. Open http://localhost:5173 in your browser
-
-## API Endpoints
-
-- `POST /auth/register` - User registration
-- `POST /auth/login` - User login
-- `GET /photos` - Get all photos
-- `POST /photos` - Upload new photo
-- And more...
-
-## License
-
-This project is licensed under the UNLICENSED License.
+**Built with ❤️ using React, TypeScript, Tailwind CSS, and NestJS**
