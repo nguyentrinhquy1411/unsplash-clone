@@ -195,19 +195,19 @@ yarn prisma:studio    # Prisma Studio GUI
 ## 📸 Screenshots
 
 ### 🏠 Homepage - Hero Section with Search
-![Homepage Hero](https://github.com/user-attachments/assets/homepage-hero-section.png)
+![Homepage Hero](./screenshot/home-1.png)
 *Beautiful hero section featuring "Beautiful Free Images & Pictures" title, prominent search bar with trending suggestions (nature, mountains, ocean, sunset, city, flowers, architecture, space), and elegant gradient backgrounds with blur effects*
 
 ### 📷 Photo Grid - Masonry Layout  
-![Photo Grid](https://github.com/user-attachments/assets/photo-grid-masonry.png)
+![Photo Grid](./screenshot/home-2.png)
 *Responsive masonry grid layout showcasing diverse photos with smooth hover effects, infinite scroll, and grid view controls (1-2-3 column toggle) in the top right*
 
 ### 🖼️ Photo Detail - Fullscreen Experience
-![Photo Detail](https://github.com/user-attachments/assets/photo-detail-fullscreen.png)
+![Photo Detail](./screenshot/detail.png)
 *Immersive photo detail page featuring "A mountain is in the distance with a body of water in front of it" by Sichen Xiang (@inseason), complete with author profile (130 Photos, 38 Likes), detailed statistics (361,383 Views, 3,557 Downloads, 199 Likes), publication date (13/09/2024), and prominent download button*
 
 ### 🔐 Authentication - Welcome Back
-![Login Page](https://github.com/user-attachments/assets/login-welcome-back.png)
+![Login Page](./screenshot/login.png)
 *Clean and modern "Welcome back" login interface with email/password fields, "Remember me" checkbox, "Continue with Google" OAuth button, and "Sign up for free" link for new users*
 
 ### ✨ Key UI Features Showcase
