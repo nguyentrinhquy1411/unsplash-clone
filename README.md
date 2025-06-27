@@ -161,77 +161,96 @@ yarn prisma:migrate   # Database migrations
 yarn prisma:studio    # Prisma Studio GUI
 ```
 
-## 🎨 UI Components
+## 🎨 UI Components & Design System
 
-### Key Features
-- **🔍 SearchHero** - Large search bar with trending suggestions (nature, mountains, ocean, sunset, city, flowers, architecture, space)
-- **🖼️ PhotoCard** - Elegant masonry grid with hover effects and author overlays
-- **⬆️ ScrollToTop** - Floating button with smooth animations (visible in bottom right)
-- **🔐 GoogleAuthPage** - Clean "Welcome back" interface with Google OAuth
-- **📱 Responsive Grid** - Adaptive 2-3-4 column layout system
-- **👤 Author Cards** - Profile pictures, stats (130 Photos, 38 Likes), and "View Profile" buttons
-- **📊 Statistics Panel** - Detailed photo metrics (Views, Downloads, Likes, Published date)
+### 🔧 **Core Components**
+- **🔍 SearchHero** - Large search with real-time trending suggestions (nature, mountains, ocean, sunset, city, flowers, **architecture**, space)
+- **🖼️ PhotoCard** - Masonry grid cards with diverse content (landscapes, wildlife, vehicles, portraits)
+- **⬆️ ScrollToTop** - Elegant floating button (visible in bottom-right corner)
+- **🔐 AuthPages** - "Welcome back" login with Google OAuth integration
+- **📱 GridControls** - Layout toggle buttons (1x1, 2x2, 3x3) for user preference
+- **👤 AuthorCards** - Profile cards showing "130 Photos, 38 Likes" with blue "View Profile" CTAs
+- **📊 StatsPanel** - Detailed metrics (361,383 Views, 3,557 Downloads, 199 Likes, 13/09/2024)
 
-### Design System
-- **Colors**: Sophisticated grays with blue gradient accents (#6366F1 to #8B5CF6)
-- **Typography**: Inter font with elegant spacing and proper hierarchy
-- **Animations**: Smooth 200-300ms transitions for all interactions
-- **Shadows**: Multi-layer elegant shadows with subtle depth
-- **Glass-morphism**: Backdrop blur effects with transparency
-- **Grid Layout**: Masonry system that adapts to image aspect ratios
-- **Category Cards**: Colorful gradient backgrounds (green, gray, blue, orange)
+### 🎨 **Visual Design Language**
+- **Color Palette**: 
+  - Primary: Sophisticated grays (#F8F9FA to #212529)
+  - Accent: Blue gradient (#6366F1 to #8B5CF6) for "Images" text and buttons
+  - Success: Emerald tones for positive actions
+  - Backgrounds: Subtle gradients with blur effects
+- **Typography**: 
+  - Font: Inter with professional weight hierarchy
+  - Hero: Bold 64px+ with tight letter spacing
+  - Body: 16px with 1.6 line height for readability
+- **Spacing**: Consistent 8px grid system with generous whitespace
+- **Animations**: 
+  - 200-300ms smooth transitions for all interactions
+  - Hover states with subtle scale and shadow changes
+  - Trending tag rotation every 3 seconds
+- **Layout**:
+  - Masonry grid system adapting to image aspect ratios
+  - Responsive breakpoints: Mobile (1 col) → Tablet (2-3 cols) → Desktop (4+ cols)
+  - Glass-morphism effects with backdrop-blur and transparency
 
 ## 📸 Screenshots
 
-### Homepage - Hero Section with Search
-![Homepage](https://i.imgur.com/homepage-hero.png)
-*Beautiful hero section with large search bar, trending suggestions, and elegant gradient backgrounds*
+### 🏠 Homepage - Hero Section with Search
+![Homepage Hero](https://github.com/user-attachments/assets/homepage-hero-section.png)
+*Beautiful hero section featuring "Beautiful Free Images & Pictures" title, prominent search bar with trending suggestions (nature, mountains, ocean, sunset, city, flowers, architecture, space), and elegant gradient backgrounds with blur effects*
 
-### Photo Grid - Masonry Layout
-![Photo Grid](https://i.imgur.com/photo-grid.png)
-*Responsive masonry grid layout with smooth hover effects and infinite scroll*
+### 📷 Photo Grid - Masonry Layout  
+![Photo Grid](https://github.com/user-attachments/assets/photo-grid-masonry.png)
+*Responsive masonry grid layout showcasing diverse photos with smooth hover effects, infinite scroll, and grid view controls (1-2-3 column toggle) in the top right*
 
-### Photo Detail - Fullscreen View
-![Photo Detail](https://i.imgur.com/photo-detail.png)
-*Immersive photo detail page with author info, statistics, and download options*
+### 🖼️ Photo Detail - Fullscreen Experience
+![Photo Detail](https://github.com/user-attachments/assets/photo-detail-fullscreen.png)
+*Immersive photo detail page featuring "A mountain is in the distance with a body of water in front of it" by Sichen Xiang (@inseason), complete with author profile (130 Photos, 38 Likes), detailed statistics (361,383 Views, 3,557 Downloads, 199 Likes), publication date (13/09/2024), and prominent download button*
 
-### Authentication - Login Page
-![Login Page](https://i.imgur.com/login-page.png)
-*Clean and modern login interface with Google OAuth integration*
+### 🔐 Authentication - Welcome Back
+![Login Page](https://github.com/user-attachments/assets/login-welcome-back.png)
+*Clean and modern "Welcome back" login interface with email/password fields, "Remember me" checkbox, "Continue with Google" OAuth button, and "Sign up for free" link for new users*
 
-### Key UI Features
-- ✨ **Glass-morphism effects** with backdrop blur
-- 🎨 **Elegant gradient backgrounds** and sophisticated shadows
-- 📱 **Responsive design** - Perfect on mobile, tablet, and desktop
-- 🔍 **Advanced search** with trending suggestions and history
-- 🎯 **Smooth animations** and micro-interactions throughout
+### ✨ Key UI Features Showcase
+- 🎨 **Glass-morphism effects** with backdrop blur creating depth
+- � **Elegant gradient backgrounds** and sophisticated shadow system  
+- 📱 **Responsive design** - Perfect experience on mobile, tablet, and desktop
+- 🔍 **Advanced search functionality** with trending suggestions and search history
+- 🎯 **Smooth animations** and micro-interactions throughout the interface
+- 📊 **Detailed statistics** showing real engagement metrics
+- 👤 **Author profiles** with follower counts and portfolio links
 
 ## 🌟 Main Pages & Features
 
-#### 🏠 **Homepage**
-- **Hero Section**: Large title "Beautiful Free Images & Pictures" with gradient text
-- **Search Bar**: Prominent search with placeholder suggestions and trending searches
-- **Category Grid**: 2-3-4 responsive layout with colorful gradient cards
-- **Photo Feed**: Infinite scroll masonry layout with optimized loading
+#### 🏠 **Homepage - Hero Experience**
+- **Hero Title**: Large, bold "Beautiful Free Images & Pictures" with gradient blue accent on "Images"
+- **Subtitle**: "The internet's source of freely-usable images. Powered by creators everywhere."
+- **Search Bar**: Prominent search with dynamic placeholder "Try 'architecture' or search for anything..."
+- **Trending Tags**: Interactive badges (nature, mountains, ocean, sunset, city, flowers, **architecture**, space)
+- **Category Navigation**: Top navigation with emoji icons (🏠 Home, 🌿 Nature, 🏛️ Architecture, ✈️ Travel, 🍽️ Food, 💻 Technology, ⚽ Sports, 🎨 Art, 👥 People)
 
-#### 📷 **Photo Grid**
-- **Masonry Layout**: Dynamic grid that adapts to different image aspect ratios
-- **Hover Effects**: Smooth overlay with author info and action buttons
-- **Grid Controls**: Toggle between different column layouts (1-2-3-4 columns)
-- **Infinite Scroll**: Seamless loading of more photos as user scrolls
+#### 📷 **Photo Grid - Dynamic Layout**
+- **Masonry System**: Adaptive grid that perfectly fits different image aspect ratios
+- **Photo Variety**: Mountains, penguins, cars, clouds, fashion - showcasing content diversity
+- **View Controls**: Top-right grid toggle buttons (1x1, 2x2, 3x3) for layout customization
+- **Hover States**: Smooth overlay effects revealing photo metadata
+- **Infinite Scroll**: Seamless content loading with performance optimization
 
-#### 🖼️ **Photo Detail**
-- **Fullscreen View**: Large photo display with immersive experience
-- **Author Card**: Profile picture, name, follower count, and "View Profile" button
-- **Statistics Panel**: Views (361,383), Downloads (3,557), Likes (199)
-- **Metadata**: Publication date and photo information
-- **Action Buttons**: Download, favorite, and share options
+#### 🖼️ **Photo Detail - Complete Experience**
+- **Hero Image**: Full-width landscape photo "A mountain is in the distance with a body of water in front of it"
+- **Author Profile**: Sichen Xiang (@inseason) with avatar, "130 Photos", "38 Likes", and blue "View Profile" button
+- **Engagement Stats**: 
+  - 👁️ Views: **361,383**
+  - ⬇️ Downloads: **3,557** 
+  - ❤️ Likes: **199**
+  - 📅 Published: **13/09/2024**
+- **Actions**: Prominent black "Download" button and heart favorite icon
 
-#### 🔐 **Authentication**
-- **Clean Login Form**: Email and password fields with "Remember me" option
-- **Google OAuth**: "Continue with Google" integration
-- **Form Validation**: Real-time validation with helpful error messages
-- **Responsive Design**: Works perfectly on all device sizes
+#### 🔐 **Authentication - User-Friendly**
+- **Welcome Message**: "Welcome back" with "Sign in to continue your journey"
+- **Form Fields**: Email address and password with clean styling
+- **Convenience**: "Remember me" checkbox and "Forgot password?" link
+- **OAuth Integration**: Google sign-in with recognizable branding
+- **Registration**: "Don't have an account? Sign up for free" conversion prompt
 
 ## 🚀 Deployment
 
