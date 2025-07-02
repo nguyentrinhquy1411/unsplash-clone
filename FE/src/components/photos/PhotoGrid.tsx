@@ -1,10 +1,11 @@
+import { Calendar, Camera, Download, Heart } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Download, Calendar, Camera, User } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Card, CardContent } from '../ui/card';
+import { cn } from '../../lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent } from '../ui/card';
 import {
   Dialog,
   DialogContent,
@@ -13,7 +14,6 @@ import {
   DialogTitle,
 } from '../ui/dialog';
 import { Skeleton } from '../ui/skeleton';
-import { cn } from '../../lib/utils';
 
 interface UnsplashPhoto {
   id: string;

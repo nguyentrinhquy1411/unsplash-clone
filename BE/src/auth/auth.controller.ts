@@ -7,6 +7,7 @@ import {
   UseGuards,
   Get,
   Request,
+  Res,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -14,6 +15,8 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
@@ -40,6 +43,24 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({ summary: 'Google OAuth2 login' })
+  async googleAuth(@Request() req) {
+    // This will redirect to Google
+  }
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({ summary: 'Google OAuth2 callback' })
+  async googleAuthRedirect(@Request() req, @Res() res: Response) {
+    const result = await this.authService.googleLogin(req.user);
+
+    // Redirect to frontend with tokens
+    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/auth/google/success?token=${result.accessToken}&refreshToken=${result.refreshToken}`;
+    res.redirect(redirectUrl);
   }
 
   @Post('refresh')
