@@ -1,0 +1,8 @@
+  {/* Loading state for initial load */}
+      {isLoading && (
+        <div style={responsiveStyle}>
+          {Array.from({ length: perPage }).map((_, index) => (
+            <PhotoSkeleton key={index} />
+          ))}
+        </div>
+      )}

@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { useInfinitePhotos } from '../../hooks/usePhotos';
-import { Loader2, Grid3X3, Grid2X2, Grid } from 'lucide-react';
-import PhotoCard from '../PhotoCard';
+import React, { useState, useCallback, useRef, useMemo } from "react";
+import { useInfinitePhotos } from "../../hooks/usePhotos";
+import { Loader2, Grid3X3, Grid2X2, Grid } from "lucide-react";
+import PhotoCard from "../PhotoCard";
 
 interface InfinitePhotoGridProps {
   searchQuery?: string;
@@ -29,7 +29,7 @@ const useIntersectionObserver = (
             fetchNextPage();
           }
         },
-        { threshold: 0.1, rootMargin: '500px' }
+        { threshold: 0.1, rootMargin: "500px" }
       );
 
       if (node) observer.current.observe(node);
@@ -43,50 +43,36 @@ const useIntersectionObserver = (
 // Loading skeleton component
 const PhotoSkeleton: React.FC = () => (
   <div className="mb-6 break-inside-avoid">
-    <div className="bg-gray-200 animate-pulse rounded-lg" style={{ aspectRatio: '4/5' }} />
+    <div className="bg-gray-200 animate-pulse rounded-lg" style={{ aspectRatio: "4/5" }} />
   </div>
 );
 
-const InfinitePhotoGrid: React.FC<InfinitePhotoGridProps> = ({
-  searchQuery,
-  topic,
-  perPage = 20,
-  className,
-}) => {
+const InfinitePhotoGrid: React.FC<InfinitePhotoGridProps> = ({ searchQuery, topic, perPage = 20, className }) => {
   const [columns, setColumns] = useState(3);
 
   // Use the infinite photos hook
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-  } = useInfinitePhotos(searchQuery, topic, perPage);
+  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
+    useInfinitePhotos(searchQuery, topic, perPage);
 
   // Intersection observer for auto-loading
-  const lastElementRef = useIntersectionObserver(
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage
-  );
+  const lastElementRef = useIntersectionObserver(hasNextPage, isFetchingNextPage, fetchNextPage);
 
   // Flatten all photos from all pages
-  const allPhotos = data?.pages.flatMap(page => page.results) || [];
+  const allPhotos = useMemo(() => {
+    if (!data) return [];
+    return data.pages.flatMap((page) => page.results);
+  }, [data]);
 
   // Masonry styles for column layout (like Unsplash)
   const masonryStyle: React.CSSProperties = {
     columnCount: columns,
-    columnGap: '20px',
-    columnFill: 'balance' as const,
+    columnGap: "20px",
+    columnFill: "balance" as const,
   };
 
   // Responsive columns based on screen size
   const getResponsiveColumns = () => {
-    if (typeof window === 'undefined') return 3;
+    if (typeof window === "undefined") return 3;
     if (window.innerWidth < 640) return 1;
     if (window.innerWidth < 1024) return 2;
     return columns;
@@ -104,7 +90,7 @@ const InfinitePhotoGrid: React.FC<InfinitePhotoGridProps> = ({
         <div className="text-6xl">😞</div>
         <h3 className="text-xl font-medium text-gray-900">Something went wrong</h3>
         <p className="text-gray-600 text-center max-w-md">
-          {error?.message || 'Failed to load photos. Please try again.'}
+          {error?.message || "Failed to load photos. Please try again."}
         </p>
         <button
           onClick={() => refetch()}
@@ -121,18 +107,18 @@ const InfinitePhotoGrid: React.FC<InfinitePhotoGridProps> = ({
       {/* Column Controls - Mobile Only */}
       <div className="flex justify-between items-center mb-6 sm:hidden">
         <h2 className="text-lg font-medium text-gray-900">
-          {searchQuery ? `Search: ${searchQuery}` : topic ? topic.charAt(0).toUpperCase() + topic.slice(1) : 'Photos'}
+          {searchQuery ? `Search: ${searchQuery}` : topic ? topic.charAt(0).toUpperCase() + topic.slice(1) : "Photos"}
         </h2>
         <div className="flex space-x-2">
           <button
             onClick={() => setColumns(1)}
-            className={`p-2 rounded-lg ${columns === 1 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600'}`}
+            className={`p-2 rounded-lg ${columns === 1 ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600"}`}
           >
             <Grid className="h-4 w-4" />
           </button>
           <button
             onClick={() => setColumns(2)}
-            className={`p-2 rounded-lg ${columns === 2 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600'}`}
+            className={`p-2 rounded-lg ${columns === 2 ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600"}`}
           >
             <Grid2X2 className="h-4 w-4" />
           </button>
@@ -142,24 +128,24 @@ const InfinitePhotoGrid: React.FC<InfinitePhotoGridProps> = ({
       {/* Desktop Column Controls */}
       <div className="hidden sm:flex justify-between items-center mb-8">
         <h2 className="text-2xl font-medium text-gray-900">
-          {searchQuery ? `Search: ${searchQuery}` : topic ? topic.charAt(0).toUpperCase() + topic.slice(1) : 'Photos'}
+          {searchQuery ? `Search: ${searchQuery}` : topic ? topic.charAt(0).toUpperCase() + topic.slice(1) : "Photos"}
         </h2>
         <div className="flex space-x-2">
           <button
             onClick={() => setColumns(2)}
-            className={`p-2 rounded-lg ${columns === 2 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600'}`}
+            className={`p-2 rounded-lg ${columns === 2 ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600"}`}
           >
             <Grid2X2 className="h-4 w-4" />
           </button>
           <button
             onClick={() => setColumns(3)}
-            className={`p-2 rounded-lg ${columns === 3 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600'}`}
+            className={`p-2 rounded-lg ${columns === 3 ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600"}`}
           >
             <Grid3X3 className="h-4 w-4" />
           </button>
           <button
             onClick={() => setColumns(4)}
-            className={`p-2 rounded-lg ${columns === 4 ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600'}`}
+            className={`p-2 rounded-lg ${columns === 4 ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600"}`}
           >
             <Grid className="h-4 w-4" />
           </button>
@@ -180,13 +166,7 @@ const InfinitePhotoGrid: React.FC<InfinitePhotoGridProps> = ({
         <div style={responsiveStyle}>
           {allPhotos.map((photo, index) => {
             const isLast = index === allPhotos.length - 1;
-            return (
-              <PhotoCard 
-                key={`${photo.id}-${index}`}
-                photo={photo}
-                ref={isLast ? lastElementRef : null}
-              />
-            );
+            return <PhotoCard key={photo.id} photo={photo} ref={isLast ? lastElementRef : null} />;
           })}
         </div>
       )}
@@ -204,9 +184,7 @@ const InfinitePhotoGrid: React.FC<InfinitePhotoGridProps> = ({
       {/* No more photos message */}
       {!hasNextPage && allPhotos.length > 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-600">
-            You've reached the end! 🎉
-          </p>
+          <p className="text-gray-600">You've reached the end! 🎉</p>
         </div>
       )}
 
@@ -217,12 +195,11 @@ const InfinitePhotoGrid: React.FC<InfinitePhotoGridProps> = ({
             <div className="text-6xl">📸</div>
             <h3 className="text-xl font-medium text-gray-900">No photos found</h3>
             <p className="text-gray-600">
-              {searchQuery 
+              {searchQuery
                 ? `No results for "${searchQuery}". Try a different search term.`
                 : topic
                 ? `No photos found for the topic "${topic}".`
-                : "No photos available at the moment."
-              }
+                : "No photos available at the moment."}
             </p>
             <button
               onClick={() => refetch()}

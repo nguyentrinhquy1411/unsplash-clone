@@ -1,19 +1,13 @@
-import { Calendar, Camera, Download, Heart } from 'lucide-react';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { cn } from '../../lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Card, CardContent } from '../ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog';
-import { Skeleton } from '../ui/skeleton';
+import { Calendar, Camera, Download, Heart } from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { cn } from "../../lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Skeleton } from "../ui/skeleton";
 
 interface UnsplashPhoto {
   id: string;
@@ -64,13 +58,7 @@ interface PhotoCardProps {
   isFavorite?: boolean;
 }
 
-const PhotoCard: React.FC<PhotoCardProps> = ({
-  photo,
-  onPhotoClick,
-  onDownload,
-  onFavorite,
-  isFavorite = false,
-}) => {
+const PhotoCard: React.FC<PhotoCardProps> = ({ photo, onPhotoClick, onDownload, onFavorite, isFavorite = false }) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -78,10 +66,10 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
   const gridRowSpan = Math.ceil(aspectRatio * 10) + 10;
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
@@ -101,26 +89,23 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
         "group cursor-pointer overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]",
         "bg-gradient-to-br from-background to-muted/30"
       )}
-      style={{ gridRowEnd: `span ${gridRowSpan}` }}
       onClick={() => onPhotoClick?.(photo)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardContent className="p-0 relative">
         {/* Loading Skeleton */}
-        {!isImageLoaded && (
-          <Skeleton className="w-full h-64 absolute inset-0" />
-        )}
+        {!isImageLoaded && <Skeleton className="w-full h-64 absolute inset-0" />}
 
         {/* Main Image */}
         <div className="relative overflow-hidden rounded-lg">
           <img
             src={photo.urls.small}
-            alt={photo.alt_description || photo.description || 'Photo'}
+            alt={photo.alt_description || photo.description || "Photo"}
             className={cn(
               "w-full h-auto object-cover transition-all duration-700",
-              isImageLoaded ? 'opacity-100' : 'opacity-0',
-              isHovered && 'scale-110'
+              isImageLoaded ? "opacity-100" : "opacity-0",
+              isHovered && "scale-110"
             )}
             onLoad={() => setIsImageLoaded(true)}
             loading="lazy"
@@ -135,10 +120,12 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
           />
 
           {/* Hover Overlay */}
-          <div className={cn(
-            "absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent",
-            "opacity-0 group-hover:opacity-100 transition-all duration-300"
-          )}>
+          <div
+            className={cn(
+              "absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent",
+              "opacity-0 group-hover:opacity-100 transition-all duration-300"
+            )}
+          >
             {/* Top Actions */}
             <div className="absolute top-3 right-3 flex space-x-2">
               <Button
@@ -146,7 +133,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
                 variant="secondary"
                 className={cn(
                   "h-8 w-8 backdrop-blur-sm",
-                  isFavorite ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/90 hover:bg-white'
+                  isFavorite ? "bg-red-500 text-white hover:bg-red-600" : "bg-white/90 hover:bg-white"
                 )}
                 onClick={handleFavorite}
               >
@@ -170,17 +157,11 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
                 <div className="flex items-center space-x-2">
                   <Avatar className="w-8 h-8 border-2 border-white/50">
                     <AvatarImage src={photo.user.profile_image.small} />
-                    <AvatarFallback className="text-xs">
-                      {photo.user.name.charAt(0)}
-                    </AvatarFallback>
+                    <AvatarFallback className="text-xs">{photo.user.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-white font-semibold text-sm">
-                      {photo.user.name}
-                    </p>
-                    <p className="text-white/80 text-xs">
-                      @{photo.user.username}
-                    </p>
+                    <p className="text-white font-semibold text-sm">{photo.user.name}</p>
+                    <p className="text-white/80 text-xs">@{photo.user.username}</p>
                   </div>
                 </div>
 
@@ -188,15 +169,11 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
                 <div className="flex items-center space-x-3 text-white">
                   <div className="flex items-center space-x-1">
                     <Heart className="h-3 w-3" />
-                    <span className="text-xs font-medium">
-                      {photo.likes.toLocaleString()}
-                    </span>
+                    <span className="text-xs font-medium">{photo.likes.toLocaleString()}</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <Download className="h-3 w-3" />
-                    <span className="text-xs font-medium">
-                      {photo.downloads.toLocaleString()}
-                    </span>
+                    <span className="text-xs font-medium">{photo.downloads.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -212,14 +189,10 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
                 {photo.width} × {photo.height}
               </Badge>
               {photo.description && (
-                <span className="text-xs text-muted-foreground truncate max-w-32">
-                  {photo.description}
-                </span>
+                <span className="text-xs text-muted-foreground truncate max-w-32">{photo.description}</span>
               )}
             </div>
-            <span className="text-xs text-muted-foreground">
-              {formatDate(photo.created_at)}
-            </span>
+            <span className="text-xs text-muted-foreground">{formatDate(photo.created_at)}</span>
           </div>
         </div>
       </CardContent>
@@ -239,25 +212,25 @@ export const PhotoGrid: React.FC<PhotoGridProps> = ({
 }) => {
   const navigate = useNavigate();
   const [selectedPhoto, setSelectedPhoto] = useState<UnsplashPhoto | null>(null);
-  
+
   // Local state for favorites if not provided
   const [localFavorites, setLocalFavorites] = useState<string[]>(() => {
-    const stored = localStorage.getItem('favoritePhotos');
+    const stored = localStorage.getItem("favoritePhotos");
     return stored ? JSON.parse(stored).map((p: any) => p.id) : [];
   });
 
   const gridStyle = {
-    gridTemplateColumns: `repeat(${columns}, 1fr)`,
-    gridAutoRows: '20px',
+    gridTemplateColumns: "1fr", // chỉ 1 cột
+    gridAutoRows: "auto", // chiều cao tự động theo nội dung
   };
 
   const handlePhotoClick = (photo: UnsplashPhoto) => {
     // Save to recent photos
-    const recentPhotos = JSON.parse(localStorage.getItem('recentPhotos') || '[]');
+    const recentPhotos = JSON.parse(localStorage.getItem("recentPhotos") || "[]");
     const filteredRecent = recentPhotos.filter((p: any) => p.id !== photo.id);
     const newRecent = [photo, ...filteredRecent].slice(0, 50); // Keep last 50
-    localStorage.setItem('recentPhotos', JSON.stringify(newRecent));
-    
+    localStorage.setItem("recentPhotos", JSON.stringify(newRecent));
+
     // Navigate to photo detail or open modal
     if (onPhotoClick) {
       setSelectedPhoto(photo);
@@ -272,33 +245,33 @@ export const PhotoGrid: React.FC<PhotoGridProps> = ({
       const response = await fetch(photo.urls.full);
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
-      
-      const link = document.createElement('a');
+
+      const link = document.createElement("a");
       link.href = url;
       link.download = `photo-${photo.id}.jpg`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      
+
       onDownload?.(photo);
     } catch (error) {
-      console.error('Download failed:', error);
+      console.error("Download failed:", error);
     }
   };
 
   const handleFavorite = (photo: UnsplashPhoto) => {
-    const favoritePhotos = JSON.parse(localStorage.getItem('favoritePhotos') || '[]');
+    const favoritePhotos = JSON.parse(localStorage.getItem("favoritePhotos") || "[]");
     const isFavorite = favoritePhotos.some((p: any) => p.id === photo.id);
-    
+
     let newFavorites;
     if (isFavorite) {
       newFavorites = favoritePhotos.filter((p: any) => p.id !== photo.id);
     } else {
       newFavorites = [photo, ...favoritePhotos];
     }
-    
-    localStorage.setItem('favoritePhotos', JSON.stringify(newFavorites));
+
+    localStorage.setItem("favoritePhotos", JSON.stringify(newFavorites));
     setLocalFavorites(newFavorites.map((p: any) => p.id));
     onFavorite?.(photo);
   };
@@ -348,24 +321,18 @@ export const PhotoGrid: React.FC<PhotoGridProps> = ({
                 <DialogTitle className="flex items-center justify-between">
                   <span>Photo by {selectedPhoto.user.name}</span>
                   <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDownload(selectedPhoto)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => handleDownload(selectedPhoto)}>
                       <Download className="h-4 w-4 mr-2" />
                       Download
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onFavorite?.(selectedPhoto)}
-                    >
-                      <Heart className={cn(
-                        "h-4 w-4 mr-2",
-                        favorites.includes(selectedPhoto.id) && "fill-current text-red-500"
-                      )} />
-                      {favorites.includes(selectedPhoto.id) ? 'Favorited' : 'Add to Favorites'}
+                    <Button variant="outline" size="sm" onClick={() => onFavorite?.(selectedPhoto)}>
+                      <Heart
+                        className={cn(
+                          "h-4 w-4 mr-2",
+                          favorites.includes(selectedPhoto.id) && "fill-current text-red-500"
+                        )}
+                      />
+                      {favorites.includes(selectedPhoto.id) ? "Favorited" : "Add to Favorites"}
                     </Button>
                   </div>
                 </DialogTitle>
@@ -386,14 +353,16 @@ export const PhotoGrid: React.FC<PhotoGridProps> = ({
               <div className="space-y-4">
                 <img
                   src={selectedPhoto.urls.regular}
-                  alt={selectedPhoto.alt_description || selectedPhoto.description || 'Photo'}
+                  alt={selectedPhoto.alt_description || selectedPhoto.description || "Photo"}
                   className="w-full max-h-96 object-contain rounded-lg"
                 />
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div className="flex items-center space-x-2">
                     <Camera className="h-4 w-4 text-muted-foreground" />
-                    <span>{selectedPhoto.width} × {selectedPhoto.height}</span>
+                    <span>
+                      {selectedPhoto.width} × {selectedPhoto.height}
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Heart className="h-4 w-4 text-muted-foreground" />
